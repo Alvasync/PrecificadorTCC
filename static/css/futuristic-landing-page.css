@@ -1,0 +1,206 @@
+/* Este CSS já estava no arquivo styles.css original da futuristic-landing-page */
+/* Mantido aqui para organização, e agora lida apenas com a seção da landing page */
+
+.main-landing-page-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    padding: 2rem;
+}
+
+.main__bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.1;
+    z-index: -1;
+}
+
+.content {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: center;
+    z-index: 1;
+}
+
+.juice-text {
+    padding: 2rem;
+    color: var(--text-color);
+}
+
+#landing-title {
+    font-size: 2.5rem;
+    color: var(--title-color);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.juice-info {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.juice-info ul {
+    list-style: none;
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.juice-info li {
+    padding: 0.5rem 1rem;
+    background: rgba(var(--first-color-rgb), 0.1);
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.juice-info li strong {
+    color: var(--first-color);
+}
+
+.photos {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.juice-wrapper {
+    position: relative;
+    border-radius: 1rem;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.juice-wrapper:hover {
+    transform: translateY(-5px);
+}
+
+.static-juice {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+.juice-wrapper:hover .static-juice {
+    transform: scale(1.1);
+}
+
+/* Estilos para as informações do imóvel */
+.property-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    transform: translateY(100%);
+    transition: transform 0.3s;
+}
+
+.juice-wrapper:hover .property-info {
+    transform: translateY(0);
+}
+
+.property-info h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.property-info ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.property-info li {
+    margin-bottom: 0.25rem;
+}
+
+.cta-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: var(--first-color);
+    color: #fff;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.cta-button:hover {
+    background: var(--first-color-alt);
+}
+
+/* Animações */
+.fade-in {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsivo */
+@media screen and (max-width: 768px) {
+    .content {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .juice-text {
+        order: 1;
+    }
+
+    .photos {
+        order: 2;
+    }
+
+    #landing-title {
+        font-size: 2rem;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .main-landing-page-container {
+        padding: 1rem;
+    }
+
+    .photos {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+
+    .juice-wrapper {
+        aspect-ratio: 16/9;
+    }
+}

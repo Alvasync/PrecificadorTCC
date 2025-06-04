@@ -1,0 +1,979 @@
+/*=============== GOOGLE FONTS ===============*/
+@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600&display=swap");
+@import url('https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900'); /* Para o menu mágico e login */
+
+/*=============== VARIABLES CSS ===============*/
+:root {
+    --header-height: 3.5rem;
+
+    /*========== Colors ==========*/
+    --first-color: #4A90E2;
+    --first-color-alt: #357ABD;
+    --first-color-light: #7AAFEA;
+    --first-color-rgb: 74, 144, 226;
+    --title-color: #333333;
+    --text-color: #666666;
+    --text-color-light: #999999;
+    --white-color: #FFFFFF;
+    --body-color: #F8F9FA;
+    --container-color: #FFFFFF;
+    --border-color: hsl(230, 25%, 80%); /* Cor de borda para modo claro */
+
+    /* Cores para o login animado, ajustadas para harmonizar */
+    --login-glow-primary: hsl(230, 75%, 56%); /* Azul principal */
+    --login-glow-secondary: hsl(190, 80%, 60%); /* Ciano mais suave */
+    --login-background: hsl(220, 27%, 8%); /* Fundo escuro */
+    --login-inner-background: hsl(220, 27%, 12%); /* Fundo interno */
+
+    /*========== Font and typography ==========*/
+    --body-font: 'Syne', sans-serif;
+    --poppins-font: 'Poppins', sans-serif;
+    --h2-font-size: 1.25rem;
+    --normal-font-size: 1rem;
+    --font-regular: 400;
+    --font-medium: 500;
+    --font-semi-bold: 600;
+    --biggest-font-size: 2.25rem;
+    --h1-font-size: 1.5rem;
+    --small-font-size: 0.875rem;
+    --smaller-font-size: 0.813rem;
+
+    /*========== z index ==========*/
+    --z-tooltip: 10;
+    --z-fixed: 100;
+    --z-modal: 1000;
+
+    /* Variáveis para o tema (do change-theme-button.css) */
+    --bg-light: hsl(235, 5%, 85%);
+    --bg-dark: hsl(220, 27%, 6%);
+    --button-light: hsl(223, 4%, 73%);
+    --button-dark: hsl(220, 27%, 6%);
+    --step: 0.5s;
+    --ease: linear(0 0%, 0.2342 12.49%, 0.4374 24.99%, 0.6093 37.49%, 0.6835 43.74%, 0.7499 49.99%, 0.8086 56.25%, 0.8593 62.5%, 0.9023 68.75%, 0.9375 75%, 0.9648 81.25%, 0.9844 87.5%, 0.9961 93.75%, 1 100%);
+    --line: light-dark(hsl(0, 0%, 10% / 0.3), hsl(0, 0%, 100% / 0.3));
+}
+
+/*========== Responsive typography ==========*/
+@media screen and (min-width: 1023px) {
+    :root {
+        --h2-font-size: 1.5rem;
+        --normal-font-size: 1rem;
+    }
+}
+
+/*=============== BASE (General Resets & Defaults) ===============*/
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    color-scheme: light dark;
+}
+
+body {
+    font-family: var(--body-font);
+    font-size: var(--normal-font-size);
+    background-color: var(--body-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex; /* Para organizar o header e main */
+    flex-direction: column;
+    overflow-x: hidden; /* Evita scroll horizontal indesejado */
+    /* Ajuste para centralizar o main-landing-page-container, se o body for o pai direto */
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
+    justify-content: flex-start; /* Alinha no topo, mas main vai empurrar */
+    position: relative; /* Para o body::before */
+}
+
+input,
+button {
+    border: none;
+    outline: none;
+    font-family: var(--body-font);
+    font-size: var(--normal-font-size);
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Ajustes para o tema (do change-theme-button.css) */
+[data-theme='light'] {
+    --line: hsl(0, 0%, 10% / 0.3);
+    color-scheme: light only;
+    background: var(--bg-light);
+    --body-color: var(--bg-light);
+    --title-color: hsl(230, 75%, 15%);
+    --text-color: hsl(230, 12%, 40%);
+    --container-color: hsl(230, 100%, 97%);
+    --border-color: hsl(230, 25%, 80%);
+}
+
+[data-theme='dark'] {
+    --line: hsl(0, 0%, 100% / 0.3);
+    color-scheme: dark only;
+    background: var(--bg-dark);
+    --body-color: var(--bg-dark);
+    --title-color: hsl(0, 0%, 90%);
+    --text-color: hsl(0, 0%, 70%);
+    --container-color: hsl(220, 27%, 10%);
+    --border-color: hsl(230, 25%, 20%);
+}
+
+/* Efeito de grade no body (do change-theme-button.css) */
+body::before {
+    --size: 45px;
+    content: '';
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    background: linear-gradient(
+        90deg,
+        var(--line) 1px,
+        transparent 1px var(--size)
+        ) 50% 50% / var(--size) var(--size),
+        linear-gradient(var(--line) 1px, transparent 1px var(--size)) 50% 50% / var(--size) var(--size);
+    mask: linear-gradient(-20deg, transparent 64%, white);
+    top: 0;
+    left: 0; /* Adicionado left: 0 */
+    transform-style: flat;
+    pointer-events: none;
+    z-index: -1;
+}
+
+
+/*=============== REUSABLE CSS CLASSES ===============*/
+.container {
+    max-width: 1120px;
+    margin-inline: 1.5rem;
+}
+
+.main {
+    position: relative;
+    width: 100%;
+    flex-grow: 1; /* Permite que o main ocupe o espaço restante */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    padding-top: var(--header-height);
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.main__bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: -1;
+}
+
+.search,
+.login {
+    position: fixed;
+    inset: 0; /* Ocupa toda a tela */
+    z-index: var(--z-modal);
+    background-color: hsla(230, 75%, 15%, .1);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px); /* For safari */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .4s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.search__close,
+.login__close {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    font-size: 2rem; /* Aumentado para melhor clique */
+    color: var(--title-color);
+    cursor: pointer;
+    z-index: var(--z-modal) + 1; /* Acima do modal */
+}
+
+/*=============== HEADER & NAV (Combinado e Harmonizado) ===============*/
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--container-color);
+    box-shadow: 0 2px 16px hsla(0, 0%, 0%, 0.1);
+    z-index: var(--z-fixed);
+    transition: background-color 0.3s;
+}
+
+.nav {
+    position: relative;
+    height: var(--header-height);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1.5rem;
+}
+
+.nav__logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--title-color);
+    font-weight: var(--font-semi-bold);
+    font-size: 1.25rem;
+    transition: color 0.3s;
+}
+
+.nav__logo i {
+    color: var(--first-color);
+    font-size: 1.5rem;
+}
+
+.nav__logo:hover {
+    color: var(--first-color);
+}
+
+.nav__actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav__search,
+.nav__login,
+.nav__toggle,
+.nav__close {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    font-size: 1.25rem;
+    color: var(--title-color);
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.nav__search:hover,
+.nav__login:hover,
+.nav__toggle:hover,
+.nav__close:hover {
+    color: var(--first-color);
+}
+
+@media screen and (max-width: 767px) {
+    .nav__menu {
+        position: fixed;
+        top: -100%;
+        left: 0;
+        width: 100%;
+        padding: 4rem 0 3rem;
+        background-color: var(--container-color);
+        box-shadow: 0 8px 16px hsla(0, 0%, 0%, 0.1);
+        transition: top 0.4s;
+        z-index: var(--z-fixed);
+    }
+}
+
+.nav__list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 2rem;
+}
+
+.nav__link {
+    position: relative;
+    color: var(--title-color);
+    font-weight: var(--font-medium);
+    transition: color 0.3s;
+}
+
+.nav__link:hover {
+    color: var(--first-color);
+}
+
+.nav__link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -0.5rem;
+    width: 0;
+    height: 2px;
+    background-color: var(--first-color);
+    transition: width 0.3s;
+}
+
+.nav__link:hover::after {
+    width: 100%;
+}
+
+.nav__close {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+}
+
+/* Mostrar menu */
+.show-menu {
+    top: var(--header-height);
+}
+
+/* Estilos específicos do Magic Navigation Menu Indicator - Adaptados e integrados */
+.nav__list .icon {
+    position: relative;
+    display: block;
+    line-height: 85px; /* Ajuste se o ícone não estiver centralizado */
+    font-size: 1.5em;
+    text-align: center;
+    transition: 0.5s;
+}
+
+.nav__list a:hover .icon {
+    color: #ffffff;
+}
+
+.nav__list li.active .icon {
+    transform: translateY(-8px);
+    color: var(--first-color); /* Usar first-color para harmonizar */
+}
+
+.nav__list .text {
+    position: absolute;
+    font-weight: var(--font-semi-bold); /* Use font-semi-bold */
+    font-size: 0.6em;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transform: translateY(10px);
+    color: #222327; /* Cor do texto no indicador */
+    transition: 0.5s;
+    opacity: 0;
+}
+
+.nav__list li.active .text {
+    transform: translateY(16px);
+    opacity: 1;
+}
+
+.indicator {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.5s;
+    z-index: -1;
+}
+
+.indicator::before {
+    content: '';
+    position: absolute;
+    width: 80%;
+    height: 16px;
+    background: var(--first-color); /* Usar first-color para harmonizar */
+    bottom: 14px;
+    border-radius: 10px;
+}
+
+.indicator::after {
+    content: "";
+    width: 7.5px;
+    height: 7.5px;
+    position: absolute;
+    top: -3px;
+    border-radius: 50%;
+    background: #333;
+    box-shadow:
+        0 0 0 2px var(--first-color), /* Usar first-color para harmonizar */
+        50px 50px var(--first-color),
+        40px 0 var(--first-color),
+        0 40px var(--first-color);
+    transform: rotate(45deg);
+    animation: animate 2s ease-in-out infinite;
+}
+
+@keyframes animate {
+    0%, 100% { transform: rotate(35deg); }
+    50% { transform: rotate(55deg); }
+}
+
+/* Posições do indicador - Ajustadas para o menu real */
+.nav__list li:nth-child(1).active ~ .indicator { transform: translateX(0px); }
+.nav__list li:nth-child(2).active ~ .indicator { transform: translateX(calc(80px * 1)); }
+.nav__list li:nth-child(3).active ~ .indicator { transform: translateX(calc(80px * 2)); }
+.nav__list li:nth-child(4).active ~ .indicator { transform: translateX(calc(80px * 3)); }
+.nav__list li:nth-child(5).active ~ .indicator { transform: translateX(calc(80px * 4)); } /* Se houver 5º item */
+
+
+/*=============== SEARCH (mantido, mas agora centralizado pelo modal) ===============*/
+.search {
+    position: fixed;
+    inset: 0;
+    background-color: hsla(0, 0%, 0%, 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: none;
+    place-items: center;
+    padding: 1rem;
+    z-index: var(--z-modal);
+}
+
+.search.show-search {
+    display: grid;
+}
+
+.search__form {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 90%;
+    max-width: 500px;
+    background-color: var(--container-color);
+    padding: 1.25rem 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 32px hsla(0, 0%, 0%, 0.2);
+}
+
+.search__icon {
+    font-size: 1.25rem;
+    color: var(--title-color);
+    margin-right: 0.75rem;
+}
+
+.search__input {
+    width: 100%;
+    background-color: transparent;
+    color: var(--text-color);
+    font-size: 1rem;
+}
+
+.search__input::placeholder {
+    color: var(--text-color-light);
+}
+
+.search__close {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    font-size: 2rem;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.search__close:hover {
+    transform: rotate(90deg);
+}
+
+/*=============== LOGIN (mantido, mas agora centralizado pelo modal) ===============*/
+/* Os estilos do box de login animado serão definidos em modern-animated-login-form.css */
+/* Apenas o show-login é controlado aqui */
+.show-login {
+    opacity: 1;
+    pointer-events: initial;
+}
+
+/* Este é o form interno do layout base, que será sobreposto pelo box animado */
+/* Removido o transform: translateY para evitar conflito com o box animado */
+.login__form {
+    display: none; /* Esconder este formulário, pois o box animado o substitui */
+}
+
+
+/*=============== BREAKPOINTS (Ajustados e Melhorados) ===============*/
+/* For medium devices */
+@media screen and (min-width: 576px){
+    .search,
+    .login{
+        /* padding-top: 10rem; */ /* Removido, centralizado por flexbox */
+    }
+
+    .search__form{
+        max-width: 450px;
+        margin-inline: auto;
+    }
+
+    .search__close,
+    .login__close{
+        width: max-content;
+        top: 2rem; /* Posição ajustada */
+        right: 2rem; /* Posição ajustada */
+        /* left: 0; right: 0; margin-inline: auto; */ /* Removido, position: absolute e top/right funcionam melhor */
+        font-size: 2rem;
+    }
+
+    /* .login__form{ max-width: 400px; margin-inline: auto; } */ /* Removido, pois o .box substitui */
+}
+
+/* For large devices */
+@media screen and (min-width: 1023px){
+    :root {
+        --header-height: 5rem; /* Aumenta a altura do header em desktop */
+    }
+    .nav{
+        height: var(--header-height); /* Usa a nova altura */
+        column-gap: 3rem;
+        padding: 0 3rem;
+        justify-content: flex-start; /* Alinha logo à esquerda */
+    }
+    .nav__logo {
+        margin-right: 3rem; /* Espaço entre logo e menu */
+    }
+    .nav__close,
+    .nav__toggle{
+        display: none;
+    }
+    .nav__menu{
+        margin-left: 0; /* Remove margin-left: auto */
+        position: static;
+        height: auto;
+        box-shadow: none;
+        padding-block: 0;
+        background-color: transparent;
+        flex-direction: row; /* Volta a ser row em desktop */
+        justify-content: flex-start; /* Alinha itens do menu à esquerda */
+        align-items: center; /* Centraliza verticalmente */
+    }
+    .nav__list{
+        flex-direction: row;
+        column-gap: 0rem; /* Removido column-gap aqui, pois cada li tem 80px */
+        background: transparent;
+        max-width: none;
+        /* A largura total da lista será 5 * 80px = 400px */
+        width: 400px; /* Definido largura fixa para o ul do menu mágico */
+    }
+    .nav__actions {
+        margin-left: auto; /* Empurra ações para a direita */
+    }
+
+    /* .login__form{ padding: 3rem 2rem 3.5rem; } */ /* Removido, pois o .box substitui */
+}
+
+@media screen and (min-width: 1150px){
+    .container{
+        margin-inline: auto;
+    }
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    position: relative;
+    margin-right: 1rem;
+}
+
+.theme-toggle-btn {
+    position: relative;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+.theme-toggle-btn:hover {
+    background-color: var(--first-color-light);
+}
+
+.theme-toggle-btn i {
+    font-size: 1.25rem;
+    color: var(--title-color);
+    transition: transform 0.5s, opacity 0.5s;
+}
+
+.theme-toggle-btn .moon-icon {
+    position: absolute;
+    opacity: 0;
+    transform: rotate(-90deg);
+}
+
+[data-theme="dark"] .theme-toggle-btn .sun-icon {
+    opacity: 0;
+    transform: rotate(90deg);
+}
+
+[data-theme="dark"] .theme-toggle-btn .moon-icon {
+    opacity: 1;
+    transform: rotate(0);
+}
+
+/* Header e Nav */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--container-color);
+    box-shadow: 0 2px 16px hsla(0, 0%, 0%, 0.1);
+    z-index: var(--z-fixed);
+    transition: background-color 0.3s;
+}
+
+.nav {
+    position: relative;
+    height: var(--header-height);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1.5rem;
+}
+
+.nav__logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--title-color);
+    font-weight: var(--font-semi-bold);
+    font-size: 1.25rem;
+    transition: color 0.3s;
+}
+
+.nav__logo i {
+    color: var(--first-color);
+    font-size: 1.5rem;
+}
+
+.nav__logo:hover {
+    color: var(--first-color);
+}
+
+/* Menu Mobile */
+@media screen and (max-width: 767px) {
+    .nav__menu {
+        position: fixed;
+        top: -100%;
+        left: 0;
+        width: 100%;
+        padding: 4rem 0 3rem;
+        background-color: var(--container-color);
+        box-shadow: 0 8px 16px hsla(0, 0%, 0%, 0.1);
+        transition: top 0.4s;
+        z-index: var(--z-fixed);
+    }
+}
+
+.nav__list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 2rem;
+}
+
+.nav__link {
+    position: relative;
+    color: var(--title-color);
+    font-weight: var(--font-medium);
+    transition: color 0.3s;
+}
+
+.nav__link:hover {
+    color: var(--first-color);
+}
+
+.nav__link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -0.5rem;
+    width: 0;
+    height: 2px;
+    background-color: var(--first-color);
+    transition: width 0.3s;
+}
+
+.nav__link:hover::after {
+    width: 100%;
+}
+
+/* Botões do Nav */
+.nav__actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav__search,
+.nav__login,
+.nav__toggle,
+.nav__close {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    font-size: 1.25rem;
+    color: var(--title-color);
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.nav__search:hover,
+.nav__login:hover,
+.nav__toggle:hover,
+.nav__close:hover {
+    color: var(--first-color);
+}
+
+.nav__close {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+}
+
+/* Show menu */
+.show-menu {
+    top: var(--header-height);
+}
+
+/* Breakpoints */
+@media screen and (min-width: 767px) {
+    .nav {
+        padding: 0 2rem;
+    }
+
+    .nav__menu {
+        position: static;
+        width: auto;
+        padding: 0;
+        background: none;
+        box-shadow: none;
+    }
+
+    .nav__list {
+        flex-direction: row;
+        column-gap: 3rem;
+    }
+
+    .nav__toggle,
+    .nav__close {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .nav {
+        padding: 0 3rem;
+    }
+
+    .nav__list {
+        column-gap: 4rem;
+    }
+}
+
+/* Main Content */
+.main {
+    padding-top: var(--header-height);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Imagens */
+.photos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.juice-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    box-shadow: 0 8px 24px hsla(0, 0%, 0%, 0.1);
+    transition: transform 0.3s;
+}
+
+.juice-wrapper:hover {
+    transform: translateY(-0.5rem);
+}
+
+.static-juice {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+.juice-wrapper:hover .static-juice {
+    transform: scale(1.1);
+}
+
+.juice-wheel,
+.fruits-wheel {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.dynamic-juice-1,
+.dynamic-juice-2,
+.dynamic-juice-3,
+.dynamic-juice-4,
+.dynamic-fruits-1,
+.dynamic-fruits-2,
+.dynamic-fruits-3,
+.dynamic-fruits-4 {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.activePhoto[data-index="0"] ~ .juice-wheel .dynamic-juice-1,
+.activePhoto[data-index="1"] ~ .juice-wheel .dynamic-juice-2,
+.activePhoto[data-index="2"] ~ .juice-wheel .dynamic-juice-3,
+.activePhoto[data-index="3"] ~ .juice-wheel .dynamic-juice-4 {
+    opacity: 1;
+}
+
+/* Tema Escuro */
+[data-theme="dark"] {
+    --container-color: hsl(220, 27%, 10%);
+    --body-color: hsl(220, 27%, 8%);
+    --title-color: hsl(0, 0%, 90%);
+    --text-color: hsl(0, 0%, 70%);
+    --border-color: hsl(230, 25%, 20%);
+}
+
+[data-theme="dark"] .header {
+    box-shadow: 0 2px 16px hsla(0, 0%, 0%, 0.2);
+}
+
+[data-theme="dark"] .nav__menu {
+    box-shadow: 0 8px 24px hsla(0, 0%, 0%, 0.2);
+}
+
+[data-theme="dark"] .juice-wrapper {
+    box-shadow: 0 8px 24px hsla(0, 0%, 0%, 0.2);
+}
+
+/*=============== SECTIONS ===============*/
+.section {
+    min-height: 100vh;
+    padding: 7rem 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    width: 100%;
+    position: relative;
+}
+
+.section__title {
+    font-size: var(--biggest-font-size);
+    color: var(--title-color);
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+}
+
+.section__content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+#home {
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Ajuste para o main */
+.main {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    padding-top: var(--header-height);
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* Ajuste para as outras seções */
+#precificador, #sobre, #contato {
+    min-height: 100vh;
+    scroll-margin-top: var(--header-height);
+}
+
+/* Flash Messages */
+.flash-message {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    animation: slideIn 0.3s ease forwards;
+}
+
+.flash-message.success {
+    background-color: #4CAF50;
+}
+
+.flash-message.error {
+    background-color: #f44336;
+}
+
+.flash-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+}
+
+.flash-close:hover {
+    opacity: 1;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}

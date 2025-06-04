@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Precificador de Imóveis com IA</title>
+
+    <!-- Fontes -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet"/>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/change-theme-button.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/magic-navigation-menu-indicator.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-animated-login-form.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/futuristic-landing-page.css') }}">
+</head>
+<body>
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">
+                    {{ message }}
+                    <button type="button" class="flash-close">&times;</button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav container">
+            <!-- Logo -->
+            <a href="#" class="nav__logo">
+                <i class="ri-home-4-line"></i>
+                Precificador IA
+            </a>
+
+            <!-- Menu -->
+            <div class="nav__menu" id="nav-menu">
+                <ul class="nav__list">
+                    <li class="list active">
+                        <a href="#home">
+                            <span class="icon"><i class="ri-home-4-line"></i></span>
+                            <span class="text">Início</span>
+                        </a>
+                    </li>
+                    <li class="list">
+                        <a href="#precificador">
+                            <span class="icon"><i class="ri-calculator-line"></i></span>
+                            <span class="text">Precificar</span>
+                        </a>
+                    </li>
+                    <li class="list">
+                        <a href="#sobre">
+                            <span class="icon"><i class="ri-information-line"></i></span>
+                            <span class="text">Sobre</span>
+                        </a>
+                    </li>
+                    <li class="list">
+                        <a href="#contato">
+                            <span class="icon"><i class="ri-mail-line"></i></span>
+                            <span class="text">Contato</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="indicator"></div>
+            </div>
+
+            <!-- Ações do Menu -->
+            <div class="nav__actions">
+                <!-- Theme Toggle -->
+                <div class="theme-toggle">
+                    <button class="theme-toggle-btn" id="theme-toggle">
+                        <i class="ri-sun-line sun-icon"></i>
+                        <i class="ri-moon-line moon-icon"></i>
+                    </button>
+                </div>
+
+                <!-- Busca -->
+                <button class="nav__search" id="search-btn" type="button">
+                    <i class="ri-search-line"></i>
+                </button>
+
+                <!-- Login -->
+                <button class="nav__login" id="login-btn" type="button">
+                    <i class="ri-user-line"></i>
+                </button>
+
+                <!-- Toggle Menu Mobile -->
+                <button class="nav__toggle" id="nav-toggle" type="button">
+                    <i class="ri-menu-line"></i>
+                </button>
+            </div>
+
+            <!-- Botão Fechar Menu Mobile -->
+            <button class="nav__close" id="nav-close" type="button">
+                <i class="ri-close-line"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <img src="{{ url_for('static', filename='images/bg-image.png') }}" alt="background image" class="main__bg">
+        
+        <!-- Home Section -->
+        <section id="home">
+            <!-- Landing Page Container -->
+            <div class="main-landing-page-container">
+                <div class="content" id="futuristic-landing-content">
+                    <div class="juice-text">
+                        <h1 id="landing-title">Bem-vindo ao Precificador de Imóveis IA</h1>
+                        <p class="juice-info" id="landing-description">
+                            Utilize nossa inteligência artificial para obter o preço justo do seu imóvel em Jacareí, SP.
+                            Analisamos dados de casas, apartamentos e terrenos com precisão e rapidez.
+                        </p>
+                        <button class="cta-button">Começar a Precificar</button>
+                    </div>
+                    
+                    <!-- Imagens Estáticas -->
+                    <div class="photos" id="static-images-container">
+                        <div class="juice-wrapper activePhoto" data-index="0">
+                            <img src="{{ url_for('static', filename='images/house1.jpeg') }}" alt="Casa" class="static-juice" />
+                            <div class="property-info">
+                                <h3>Casas</h3>
+                                <p>Encontre a casa dos seus sonhos em Jacareí. Oferecemos as melhores opções de casas, desde compactas até mansões, todas com preços justos baseados em nossa IA.</p>
+                            </div>
+                        </div>
+                        <div class="juice-wrapper" data-index="1">
+                            <img src="{{ url_for('static', filename='images/terrain1.jpeg') }}" alt="Terreno" class="static-juice" />
+                            <div class="property-info">
+                                <h3>Terrenos</h3>
+                                <p>Invista em terrenos com alto potencial de valorização. Nossa IA analisa a localização e infraestrutura para garantir o melhor negócio para você.</p>
+                            </div>
+                        </div>
+                        <div class="juice-wrapper" data-index="2">
+                            <img src="{{ url_for('static', filename='images/condo1.jpeg') }}" alt="Condomínio" class="static-juice" />
+                            <div class="property-info">
+                                <h3>Condomínios</h3>
+                                <p>Segurança e conforto em um só lugar. Descubra condomínios fechados com excelente custo-benefício, avaliados pela nossa tecnologia.</p>
+                            </div>
+                        </div>
+                        <div class="juice-wrapper" data-index="3">
+                            <img src="{{ url_for('static', filename='images/apartment1.jpeg') }}" alt="Apartamento" class="static-juice" />
+                            <div class="property-info">
+                                <h3>Comercial</h3>
+                                <p>Ótimas oportunidades para seu negócio. Imóveis comerciais em localizações estratégicas com preços calculados pela nossa IA.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Imagens Dinâmicas -->
+                <div class="juice-wheel">
+                    <img src="{{ url_for('static', filename='images/house_big.jpeg') }}" alt="Casa Grande" class="dynamic-juice-1" />
+                    <img src="{{ url_for('static', filename='images/terrain_big.jpeg') }}" alt="Terreno Grande" class="dynamic-juice-2" />
+                    <img src="{{ url_for('static', filename='images/condo_big.jpeg') }}" alt="Condomínio Grande" class="dynamic-juice-3" />
+                    <img src="{{ url_for('static', filename='images/apartment_big.jpeg') }}" alt="Apartamento Grande" class="dynamic-juice-4" />
+                </div>
+
+                <!-- Imagens de Fundo -->
+                <div class="fruits-wheel">
+                    <img src="{{ url_for('static', filename='images/bg_house.jpeg') }}" alt="Background Casa" class="dynamic-fruits-1" />
+                    <img src="{{ url_for('static', filename='images/bg_terrain.jpeg') }}" alt="Background Terreno" class="dynamic-fruits-2" />
+                    <img src="{{ url_for('static', filename='images/bg_condo.jpeg') }}" alt="Background Condomínio" class="dynamic-fruits-3" />
+                    <img src="{{ url_for('static', filename='images/bg_apartment.jpeg') }}" alt="Background Apartamento" class="dynamic-fruits-4" />
+                </div>
+            </div>
+        </section>
+
+        <!-- Precificador Section -->
+        <section id="precificador" class="section">
+            <h2 class="section__title">Precificar Imóvel</h2>
+            <div class="section__content">
+                <p>Em breve: Formulário de precificação de imóveis</p>
+            </div>
+        </section>
+
+        <!-- Sobre Section -->
+        <section id="sobre" class="section">
+            <h2 class="section__title">Sobre Nós</h2>
+            <div class="section__content">
+                <p>Somos especialistas em avaliação de imóveis em Jacareí</p>
+            </div>
+        </section>
+
+        <!-- Contato Section -->
+        <section id="contato" class="section">
+            <h2 class="section__title">Contato</h2>
+            <div class="section__content">
+                <p>Entre em contato conosco</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Search Modal -->
+    <div class="search" id="search">
+        <form action="" class="search__form">
+            <i class="ri-search-line search__icon"></i>
+            <input type="search" placeholder="O que você está procurando?" class="search__input">
+        </form>
+        <button type="button" class="search__close" id="search-close">
+            <i class="ri-close-line"></i>
+        </button>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="login" id="login">
+        <div class="box">
+            <button type="button" class="login__close" id="login-close">
+                <i class="ri-close-line"></i>
+            </button>
+            
+            <div class="loginBx" id="login-form">
+                <h2>
+                    <i class="ri-login-circle-line"></i>
+                    Entrar
+                </h2>
+                
+                <form id="loginForm" method="POST" action="/login">
+                    <div class="input-group">
+                        <input type="text" name="username" id="username" required>
+                        <label for="username">Usuário</label>
+                        <i class="ri-user-line"></i>
+                    </div>
+                    
+                    <div class="input-group">
+                        <input type="password" name="password" id="password" required>
+                        <label for="password">Senha</label>
+                        <i class="ri-lock-line"></i>
+                    </div>
+                    
+                    <button type="submit" class="login-btn">
+                        <span>Entrar</span>
+                        <i class="ri-arrow-right-line"></i>
+                    </button>
+                    
+                    <div class="group">
+                        <a href="#" class="forgot-password" onclick="showForgotPassword(event)">Esqueceu a senha?</a>
+                        <a href="#" class="register" onclick="showRegister(event)">Criar conta</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Formulário de Registro -->
+            <div class="loginBx" id="register-form" style="display: none;">
+                <h2>
+                    <i class="ri-user-add-line"></i>
+                    Criar Conta
+                </h2>
+                
+                <form id="registerForm" method="POST" action="/register">
+                    <div class="input-group">
+                        <input type="text" name="reg-username" id="reg-username" required>
+                        <label for="reg-username">Usuário</label>
+                        <i class="ri-user-line"></i>
+                    </div>
+                    
+                    <div class="input-group">
+                        <input type="email" name="reg-email" id="reg-email" required>
+                        <label for="reg-email">Email</label>
+                        <i class="ri-mail-line"></i>
+                    </div>
+                    
+                    <div class="input-group">
+                        <input type="password" name="reg-password" id="reg-password" required>
+                        <label for="reg-password">Senha</label>
+                        <i class="ri-lock-line"></i>
+                    </div>
+                    
+                    <div class="input-group">
+                        <input type="password" name="reg-confirm-password" id="reg-confirm-password" required>
+                        <label for="reg-confirm-password">Confirmar Senha</label>
+                        <i class="ri-lock-line"></i>
+                    </div>
+                    
+                    <button type="submit" class="login-btn">
+                        <span>Criar Conta</span>
+                        <i class="ri-user-add-line"></i>
+                    </button>
+                    
+                    <div class="group">
+                        <a href="#" onclick="showLogin(event)">Voltar para Login</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Formulário de Recuperação de Senha -->
+            <div class="loginBx" id="forgot-password-form" style="display: none;">
+                <h2>
+                    <i class="ri-key-line"></i>
+                    Recuperar Senha
+                </h2>
+                
+                <form id="forgotPasswordForm" method="POST" action="/forgot-password">
+                    <div class="input-group">
+                        <input type="email" name="recovery-email" id="recovery-email" required>
+                        <label for="recovery-email">Email</label>
+                        <i class="ri-mail-line"></i>
+                    </div>
+                    
+                    <button type="submit" class="login-btn">
+                        <span>Recuperar Senha</span>
+                        <i class="ri-send-plane-line"></i>
+                    </button>
+                    
+                    <div class="group">
+                        <a href="#" onclick="showLogin(event)">Voltar para Login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/magic-navigation-menu-indicator.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/change-theme-button.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/futuristic-landing-page.js') }}"></script>
+    
+    <!-- Script para controlar os formulários de login -->
+    <script>
+        function showLogin(e) {
+            e.preventDefault();
+            document.getElementById('login-form').style.display = 'block';
+            document.getElementById('register-form').style.display = 'none';
+            document.getElementById('forgot-password-form').style.display = 'none';
+        }
+        
+        function showRegister(e) {
+            e.preventDefault();
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('register-form').style.display = 'block';
+            document.getElementById('forgot-password-form').style.display = 'none';
+        }
+        
+        function showForgotPassword(e) {
+            e.preventDefault();
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('register-form').style.display = 'none';
+            document.getElementById('forgot-password-form').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

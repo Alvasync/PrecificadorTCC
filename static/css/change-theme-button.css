@@ -1,0 +1,42 @@
+#theme-toggle-button-container {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.theme-toggle-button {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    background: var(--container-color);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.5s;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.theme-toggle-button i {
+    font-size: 1.25rem;
+    color: var(--title-color);
+    transition: 0.5s;
+}
+
+.theme-toggle-button:hover {
+    transform: scale(1.1);
+}
+
+/* Tema escuro */
+.dark-theme .theme-toggle-button {
+    background: var(--first-color);
+}
+
+.dark-theme .theme-toggle-button i {
+    color: var(--white-color);
+}
