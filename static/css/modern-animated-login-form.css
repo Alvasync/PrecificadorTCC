@@ -14,11 +14,11 @@
   position: relative;
   width: 90%;
   max-width: 400px;
-  min-height: 400px;
+  min-height: 520px;
   background-color: var(--container-color);
   border-radius: 1rem;
   padding: 2rem;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   animation: rotating 4s linear infinite;
   display: flex;
@@ -29,6 +29,7 @@
   z-index: 10000;
   transform: scale(0.9);
   opacity: 0;
+  padding-bottom: 3.5rem;
 }
 
 @keyframes rotating {
@@ -65,8 +66,7 @@
 }
 
 .box:hover {
-  width: 450px;
-  height: 500px;
+  /* Removido width e height para não encolher/expandir a caixa no hover */
 }
 
 .box:hover .login {

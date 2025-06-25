@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modern-animated-login-form.css') }}">
+    <style>
+        #novo_nome, #whatsapp {
+            background: #f5f7fa !important;
+            color: #222 !important;
+            font-size: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            transition: border-color 0.3s;
+        }
+        #novo_nome:focus, #whatsapp:focus {
+            border-color: #4A90E2 !important;
+            background: #fff !important;
+            outline: none;
+        }
+        #novo_nome::placeholder, #whatsapp::placeholder {
+            color: #b0b6be !important;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body style="background: var(--body-color);">
+    <div class="perfil-container" style="max-width: 400px; margin: 3rem auto; background: var(--container-color); border-radius: 1rem; box-shadow: 0 2px 16px rgba(0,0,0,0.08); padding: 2rem;">
+        <h2 style="text-align:center; margin-bottom: 2rem;">Meu Perfil</h2>
+        <form method="POST" action="/perfil">
+            <div style="margin-bottom: 1.5rem;">
+                <label for="novo_nome" style="display:block;margin-bottom:0.5rem;">Nome de usuário</label>
+                <input type="text" id="novo_nome" name="novo_nome" value="{{ user.username }}" required placeholder="Nome de usuário" style="width:100%;padding:0.75rem;border-radius:0.5rem;border:1px solid var(--border-color);">
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <label for="whatsapp" style="display:block;margin-bottom:0.5rem;">WhatsApp</label>
+                <input type="text" id="whatsapp" name="whatsapp" value="{{ user.whatsapp or '' }}" placeholder="(99) 99999-9999" style="width:100%;padding:0.75rem;border-radius:0.5rem;border:1px solid var(--border-color);">
+            </div>
+            <button type="submit" class="login-btn" style="width:100%;margin-top:1rem;">Salvar Alterações</button>
+        </form>
+        <div style="text-align:center;margin-top:2rem;">
+            <a href="/" style="color:var(--first-color);text-decoration:underline;">Voltar para o início</a>
+        </div>
+    </div>
+</body>
+</html> 

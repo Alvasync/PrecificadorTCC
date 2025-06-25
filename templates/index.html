@@ -85,10 +85,64 @@
                     <i class="ri-search-line"></i>
                 </button>
 
-                <!-- Login -->
+                <!-- Login/User -->
+                {% if user %}
+                <div class="nav__user-menu" style="position: relative;">
+                    <button class="nav__user-btn" id="user-menu-btn" type="button">
+                        <i class="ri-user-fill"></i> {{ user }}
+                    </button>
+                    <div class="user-dropdown" id="user-dropdown" style="display: none; position: absolute; right: 0; top: 110%; background: var(--container-color); box-shadow: 0 4px 24px rgba(0,0,0,0.18); border-radius: 0.75rem; min-width: 180px; z-index: 10001; padding: 0.5rem 0; border: 1px solid var(--border-color);">
+                        <a href="/perfil" class="user-dropdown-link" style="display: block; padding: 0.85rem 1.5rem; color: var(--text-color); text-decoration: none; font-size: 1rem; border-radius: 0.5rem; transition: background 0.2s;">
+                            Meu Perfil
+                        </a>
+                        <a href="/logout" class="user-dropdown-link" style="display: block; padding: 0.85rem 1.5rem; color: var(--text-color); text-decoration: none; font-size: 1rem; border-radius: 0.5rem; transition: background 0.2s;">
+                            Sair
+                        </a>
+                    </div>
+                </div>
+                <style>
+                .user-dropdown-link:hover {
+                    background: var(--first-color-light);
+                    color: #fff !important;
+                }
+                .nav__user-btn {
+                    background: var(--container-color);
+                    border: 1px solid var(--border-color);
+                    border-radius: 0.75rem;
+                    padding: 0.5rem 1.25rem;
+                    font-size: 1rem;
+                    color: var(--title-color);
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    cursor: pointer;
+                    transition: box-shadow 0.2s, border 0.2s;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+                }
+                .nav__user-btn:hover {
+                    border: 1.5px solid var(--first-color);
+                    box-shadow: 0 4px 16px rgba(74,144,226,0.10);
+                }
+                </style>
+                <script>
+                // Dropdown do usuário
+                const userMenuBtn = document.getElementById('user-menu-btn');
+                const userDropdown = document.getElementById('user-dropdown');
+                if(userMenuBtn && userDropdown) {
+                    userMenuBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        userDropdown.style.display = userDropdown.style.display === 'block' ? 'none' : 'block';
+                    });
+                    document.addEventListener('click', function(e) {
+                        if(userDropdown.style.display === 'block') userDropdown.style.display = 'none';
+                    });
+                }
+                </script>
+                {% else %}
                 <button class="nav__login" id="login-btn" type="button">
                     <i class="ri-user-line"></i>
                 </button>
+                {% endif %}
 
                 <!-- Toggle Menu Mobile -->
                 <button class="nav__toggle" id="nav-toggle" type="button">
@@ -175,8 +229,78 @@
         <!-- Precificador Section -->
         <section id="precificador" class="section">
             <h2 class="section__title">Precificar Imóvel</h2>
-            <div class="section__content">
-                <p>Em breve: Formulário de precificação de imóveis</p>
+            <div class="section__content" style="max-width: 500px; margin: 0 auto;">
+                <p style="margin-bottom: 1.5rem; font-size: 1rem; color: var(--text-color);">
+                    Nosso precificador utiliza <strong>inteligência artificial baseada em regras</strong> e dados reais dos bairros de Jacareí. O sistema ajusta o preço conforme área, quartos e banheiros, simulando o raciocínio de um avaliador humano.
+                </p>
+                <form method="POST" action="#precificador" id="precificar-form" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <label for="tipo_imovel">Tipo de Imóvel</label>
+                    <select name="tipo_imovel" id="tipo_imovel" required style="padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-color);">
+                        <option value="" disabled selected>Selecione o tipo</option>
+                        <option value="Casa" {% if tipo_imovel == 'Casa' %}selected{% endif %}>Casa</option>
+                        <option value="Apartamento" {% if tipo_imovel == 'Apartamento' %}selected{% endif %}>Apartamento</option>
+                        <option value="Terreno" {% if tipo_imovel == 'Terreno' %}selected{% endif %}>Terreno</option>
+                        <option value="Comercial" {% if tipo_imovel == 'Comercial' %}selected{% endif %}>Comercial</option>
+                    </select>
+                    <label for="bairro">Bairro</label>
+                    <select name="bairro" id="bairro" required style="padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-color);">
+                        <option value="" disabled selected>Selecione o bairro</option>
+                        {% for b in [
+                            'Águas de Igaratá', 'Altos de Sant\'ana I', 'Altos de Sant\'ana II', 'Avareí',
+                            'Balneário Paraíba', 'Bandeira Branca I', 'Bandeira Branca II', 'Beira Rio',
+                            'Bela Vista', 'Bica do Boi', 'Campo Grande', 'Cassununga', 'Centro',
+                            'Chacaras Guararema', 'Chacaras Marília', 'Chacaras Reunidas do Igarapés',
+                            'Cidade Jardim', 'Cidade Salvador', 'Clube de Campo', 'Conjunto 1° de Maio',
+                            'Conjunto 22 de Abril', 'Conjunto São Benedito', 'Estância Porto Velho',
+                            'Fazenda Três Moleques', 'Igarapés', 'Itapoã', 'Jardim América',
+                            'Jardim Bela Vista', 'Jardim Boa Vista', 'Jardim Califórnia', 'Jardim Coleginho',
+                            'Jardim das Oliveiras', 'Jardim Emília', 'Jardim Esperança', 'Jardim Flórida',
+                            'Jardim Guarani', 'Jardim Independência', 'Jardim Jacinto', 'Jardim Leblon',
+                            'Jardim Leonidia', 'Jardim Liberdade', 'Jardim Luíza', 'Jardim Marcondes',
+                            'Jardim Maria Amélia I', 'Jardim Maria Amélia II', 'Jardim Marister', 'Jardim Mesquita',
+                            'Jardim Nicélia', 'Jardim Nossa Senhora de Lourdes', 'Jardim Nova Esperança',
+                            'Jardim Novo Amanhecer', 'Jardim Olímpia', 'Jardim Panorama', 'Jardim Paraíba',
+                            'Jardim Paraíso', 'Jardim Paulistano', 'Jardim Pereira do Amparo', 'Jardim Pitoresco',
+                            'Jardim Primavera', 'Jardim Real', 'Jardim Santa Maria', 'Jardim Santa Marina',
+                            'Jardim Santa Terezinha', 'Jardim São Gabriel', 'Jardim São José', 'Jardim São Luiz',
+                            'Jardim São Manoel', 'Jardim São Paulo', 'Jardim Siesta', 'Jardim Sper',
+                            'Jardim Vera Lúcia', 'Jardim Vista Verde', 'Jardim Yolanda', 'Lagoinha',
+                            'Lagoa Azul', 'Mandi', 'Mirante do Vale', 'Nova Aliança', 'Nova Jacareí',
+                            'Pagador Andrade', 'Parateí de Baixo', 'Parateí de Cima', 'Parateí do Meio',
+                            'Parque Brasil', 'Parque Califórnia', 'Parque dos Príncipes', 'Parque dos Sinos',
+                            'Parque Imperial', 'Parque Itamaraty', 'Parque Meia Lua', 'Parque Nova América',
+                            'Parque Residencial Jequitiba', 'Parque Santo Antônio', 'Parque Santa Paula',
+                            'Pedramar', 'Pedras Preciosas', 'Pedregulho', 'Portal Alvorada',
+                            'Prolongamento Santa Maria', 'Recanto dos Pássaros', 'Remédios', 'Rio Abaixo',
+                            'Rio Comprido', 'Santa Cruz dos Lázaros', 'Santo Antonio da Boa Vista',
+                            'São João', 'São Silvestre', 'Sunset Garden', 'Terras da Conceição',
+                            'Terras de Santa Clara', 'Terras de Santa Helena', 'Terras de Sant\'ana',
+                            'Terras de São João', 'Vale dos Lagos', 'Veraneio Ijal', 'Veraneio Irajá',
+                            'Vila Aprazível', 'Vila Denise', 'Vila D\'Itália', 'Vila Emídia Costa',
+                            'Vila Formosa', 'Vila Garcia', 'Vila Lopez', 'Vila Machado', 'Vila Martinez',
+                            'Vila Nossa Senhora de Fátima', 'Vila Pinheiro', 'Vila Romana', 'Vila Santa Mônica',
+                            'Vila Santa Rita', 'Vila São Judas Tadeu', 'Vila São João II', 'Vila São Simão',
+                            'Vila Vilma', 'Vila Zezé', 'Vilas de Sant\'ana', 'Villa Branca', 'Vista Azul'] %}
+                        <option value="{{ b }}" {% if bairro == b %}selected{% endif %}>{{ b }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="area_construida">Área construída (m²)</label>
+                    <input type="number" name="area_construida" id="area_construida" min="1" max="10000" step="1" required placeholder="Ex: 70" style="padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-color);">
+                    <label for="area_terreno">Área do terreno (m²)</label>
+                    <input type="number" name="area_terreno" id="area_terreno" min="1" max="10000" step="1" required placeholder="Ex: 450" style="padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-color);">
+                    <label for="quartos">Quartos</label>
+                    <input type="number" name="quartos" id="quartos" min="1" max="10" step="1" required placeholder="Ex: 3" style="padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-color);">
+                    <label for="banheiros">Banheiros</label>
+                    <input type="number" name="banheiros" id="banheiros" min="1" max="10" step="1" required placeholder="Ex: 2" style="padding: 0.75rem; border-radius: 0.5rem; border: 1px solid var(--border-color);">
+                    <button type="submit" class="login-btn" style="width:100%;margin-top:1rem;">Calcular Preço</button>
+                </form>
+                {% if preco %}
+                <div style="margin-top:2rem;padding:2rem;background:var(--container-color);border-radius:1rem;box-shadow:0 2px 16px rgba(0,0,0,0.08);text-align:center;">
+                    <h3 style="color:var(--first-color);font-size:2rem;margin-bottom:1rem;">Preço Estimado</h3>
+                    <div style="font-size:2.2rem;font-weight:700;color:var(--title-color);">{{ preco }}</div>
+                    <div style="margin-top:1rem;color:var(--text-color-light);font-size:1rem;">* Estimativa baseada em dados reais e regras de avaliação de mercado.</div>
+                </div>
+                {% endif %}
             </div>
         </section>
 
@@ -201,7 +325,8 @@
     <div class="search" id="search">
         <form action="" class="search__form">
             <i class="ri-search-line search__icon"></i>
-            <input type="search" placeholder="O que você está procurando?" class="search__input">
+            <input type="search" placeholder="O que você está procurando?" class="search__input" id="search-input" autocomplete="off">
+            <div id="search-suggestions" class="search__suggestions" style="position:absolute;top:3.2rem;left:0;width:100%;background:var(--container-color);border-radius:0.5rem;box-shadow:0 4px 16px rgba(0,0,0,0.08);z-index:10001;display:none;"></div>
         </form>
         <button type="button" class="search__close" id="search-close">
             <i class="ri-close-line"></i>
@@ -247,44 +372,38 @@
             </div>
 
             <!-- Formulário de Registro -->
-            <div class="loginBx" id="register-form" style="display: none;">
+            <div class="loginBx" id="register-form" style="display: none; position: relative;">
                 <h2>
                     <i class="ri-user-add-line"></i>
                     Criar Conta
                 </h2>
-                
                 <form id="registerForm" method="POST" action="/register">
                     <div class="input-group">
-                        <input type="text" name="reg-username" id="reg-username" required>
+                        <input type="text" name="reg-username" id="reg-username" required autocomplete="off">
                         <label for="reg-username">Usuário</label>
                         <i class="ri-user-line"></i>
                     </div>
-                    
                     <div class="input-group">
-                        <input type="email" name="reg-email" id="reg-email" required>
+                        <input type="email" name="reg-email" id="reg-email" required autocomplete="off">
                         <label for="reg-email">Email</label>
                         <i class="ri-mail-line"></i>
                     </div>
-                    
                     <div class="input-group">
-                        <input type="password" name="reg-password" id="reg-password" required>
+                        <input type="password" name="reg-password" id="reg-password" required autocomplete="off">
                         <label for="reg-password">Senha</label>
                         <i class="ri-lock-line"></i>
                     </div>
-                    
                     <div class="input-group">
-                        <input type="password" name="reg-confirm-password" id="reg-confirm-password" required>
+                        <input type="password" name="reg-confirm-password" id="reg-confirm-password" required autocomplete="off">
                         <label for="reg-confirm-password">Confirmar Senha</label>
                         <i class="ri-lock-line"></i>
                     </div>
-                    
                     <button type="submit" class="login-btn">
                         <span>Criar Conta</span>
                         <i class="ri-user-add-line"></i>
                     </button>
-                    
-                    <div class="group">
-                        <a href="#" onclick="showLogin(event)">Voltar para Login</a>
+                    <div class="group" style="margin-top: 1.5rem; display: flex; justify-content: center;">
+                        <a href="#" onclick="showLogin(event)" style="display: block; background: none; color: var(--first-color); font-weight: 500;">Voltar para Login</a>
                     </div>
                 </form>
             </div>
@@ -308,8 +427,8 @@
                         <i class="ri-send-plane-line"></i>
                     </button>
                     
-                    <div class="group">
-                        <a href="#" onclick="showLogin(event)">Voltar para Login</a>
+                    <div class="group" style="margin-top: 1.5rem; display: flex; justify-content: flex-start;">
+                        <a href="#" onclick="showLogin(event)" style="display: block;">Voltar para Login</a>
                     </div>
                 </form>
             </div>

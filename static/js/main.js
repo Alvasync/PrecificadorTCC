@@ -19,19 +19,6 @@ if(navClose){
     })
 }
 
-/*=============== ACTIVE LINK ===============*/
-const navLinks = document.querySelectorAll('.nav__link')
-
-function linkAction(){
-    navLinks.forEach(n => n.classList.remove('active-link'))
-    this.classList.add('active-link')
-    
-    // Quando clicar em um link do menu, fechar o menu em modo mobile
-    navMenu.classList.remove('show-menu')
-}
-
-navLinks.forEach(n => n.addEventListener('click', linkAction))
-
 /*=============== SEARCH ===============*/
 const search = document.getElementById('search'),
       searchBtn = document.getElementById('search-btn'),
@@ -83,94 +70,13 @@ if(loginClose){
     })
 }
 
-/* Fechar login ao clicar fora */
+/* Fechar login ao clicar fora da caixa (apenas se clicar no fundo do modal) */
 login.addEventListener('click', (e) => {
     if (e.target === login) {
         login.classList.remove('show-login')
         document.body.style.overflow = ''
     }
 })
-
-/* Login form submission */
-if(loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault()
-        
-        // Remove mensagens antigas
-        const oldMessages = document.querySelectorAll('.login-message')
-        oldMessages.forEach(msg => msg.remove())
-        
-        const username = document.getElementById('username').value
-        const password = document.getElementById('password').value
-        
-        if (!username || !password) {
-            showMessage('Por favor, preencha todos os campos', 'error')
-            return
-        }
-        
-        try {
-            const response = await fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken') // Para Django
-                },
-                body: JSON.stringify({ username, password })
-            })
-
-            const data = await response.json()
-            
-            if (response.ok) {
-                showMessage('Login realizado com sucesso!', 'success')
-                
-                setTimeout(() => {
-                    login.classList.remove('show-login')
-                    document.body.style.overflow = ''
-                    
-                    // Atualiza a interface para usuário logado
-                    document.body.classList.add('logged-in')
-                    loginBtn.innerHTML = '<i class="ri-user-fill"></i>'
-                    
-                    // Redireciona para a página principal
-                    window.location.href = '/'
-                }, 1500)
-            } else {
-                showMessage(data.message || 'Erro ao fazer login. Verifique suas credenciais.', 'error')
-            }
-        } catch (error) {
-            console.error('Erro:', error)
-            showMessage('Erro ao conectar com o servidor. Tente novamente mais tarde.', 'error')
-        }
-    })
-}
-
-/* Função auxiliar para mostrar mensagens */
-function showMessage(text, type) {
-    const message = document.createElement('div')
-    message.className = `login-message ${type}`
-    message.textContent = text
-    document.body.appendChild(message)
-    
-    setTimeout(() => {
-        message.remove()
-    }, type === 'success' ? 1500 : 3000)
-}
-
-/* Função auxiliar para obter cookies (necessário para CSRF token no Django) */
-function getCookie(name) {
-    let cookieValue = null
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';')
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim()
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1))
-                break
-            }
-        }
-    }
-    return cookieValue
-}
 
 /*=============== THEME TOGGLE ===============*/
 const themeToggle = document.getElementById('theme-toggle')
@@ -249,3 +155,164 @@ photos.forEach(photo => {
         photo.classList.add('activePhoto')
     })
 })
+
+/*=============== FLASH MESSAGE CLOSE ===============*/
+document.querySelectorAll('.flash-close').forEach(btn => {
+    btn.addEventListener('click', function() {
+        this.parentElement.remove();
+    });
+});
+
+/*=============== SEARCH SUGGESTIONS ===============*/
+const searchInput = document.getElementById('search-input');
+const searchSuggestions = document.getElementById('search-suggestions');
+
+const navItems = [
+    { name: 'Início', id: 'home' },
+    { name: 'Precificar', id: 'precificador' },
+    { name: 'Sobre', id: 'sobre' },
+    { name: 'Contato', id: 'contato' }
+];
+
+searchInput.addEventListener('input', function() {
+    const value = this.value.trim().toLowerCase();
+    if (!value) {
+        searchSuggestions.style.display = 'none';
+        searchSuggestions.innerHTML = '';
+        return;
+    }
+    const filtered = navItems.filter(item => item.name.toLowerCase().includes(value));
+    if (filtered.length === 0) {
+        searchSuggestions.style.display = 'none';
+        searchSuggestions.innerHTML = '';
+        return;
+    }
+    searchSuggestions.innerHTML = filtered.map(item => `<div class="search__suggestion" data-id="${item.id}" style="padding:0.75rem 1rem;cursor:pointer;">${item.name}</div>`).join('');
+    searchSuggestions.style.display = 'block';
+});
+
+searchSuggestions.addEventListener('mousedown', function(e) {
+    if (e.target.classList.contains('search__suggestion')) {
+        const id = e.target.getAttribute('data-id');
+        const section = document.getElementById(id);
+        if (section) {
+            section.scrollIntoView({ behavior: 'smooth' });
+            search.classList.remove('show-search');
+            document.body.style.overflow = '';
+            searchSuggestions.style.display = 'none';
+            searchInput.value = '';
+        }
+    }
+});
+
+searchInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        const value = this.value.trim().toLowerCase();
+        const found = navItems.find(item => item.name.toLowerCase().includes(value));
+        if (found) {
+            const section = document.getElementById(found.id);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+                search.classList.remove('show-search');
+                document.body.style.overflow = '';
+                searchSuggestions.style.display = 'none';
+                searchInput.value = '';
+            }
+        }
+    }
+});
+
+// Esconde sugestões ao clicar fora
+searchInput.addEventListener('blur', function() {
+    setTimeout(() => { searchSuggestions.style.display = 'none'; }, 150);
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    /*=============== LUPA - BUSCA INTELIGENTE ISOLADA ===============*/
+    (function() {
+        const searchInput = document.getElementById('search-input');
+        const searchSuggestions = document.getElementById('search-suggestions');
+        const searchModal = document.getElementById('search');
+        if (!searchInput || !searchSuggestions || !searchModal) return;
+
+        const navItemsLupa = [
+            { name: 'Início', id: 'home' },
+            { name: 'Precificar', id: 'precificador' },
+            { name: 'Sobre', id: 'sobre' },
+            { name: 'Contato', id: 'contato' }
+        ];
+
+        searchInput.addEventListener('input', function() {
+            const value = this.value.trim().toLowerCase();
+            if (!value) {
+                searchSuggestions.style.display = 'none';
+                searchSuggestions.innerHTML = '';
+                return;
+            }
+            const filtered = navItemsLupa.filter(item => item.name.toLowerCase().includes(value));
+            if (filtered.length === 0) {
+                searchSuggestions.style.display = 'none';
+                searchSuggestions.innerHTML = '';
+                return;
+            }
+            searchSuggestions.innerHTML = filtered.map(item => `<div class="search__suggestion" data-id="${item.id}" style="padding:0.75rem 1rem;cursor:pointer;">${item.name}</div>`).join('');
+            searchSuggestions.style.display = 'block';
+        });
+
+        searchSuggestions.addEventListener('mousedown', function(e) {
+            if (e.target.classList.contains('search__suggestion')) {
+                const id = e.target.getAttribute('data-id');
+                const section = document.getElementById(id);
+                if (section) {
+                    section.scrollIntoView({ behavior: 'smooth' });
+                    searchModal.classList.remove('show-search');
+                    document.body.style.overflow = '';
+                    searchSuggestions.style.display = 'none';
+                    searchInput.value = '';
+                }
+            }
+        });
+
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const value = this.value.trim().toLowerCase();
+                const found = navItemsLupa.find(item => item.name.toLowerCase().includes(value));
+                if (found) {
+                    const section = document.getElementById(found.id);
+                    if (section) {
+                        section.scrollIntoView({ behavior: 'smooth' });
+                        searchModal.classList.remove('show-search');
+                        document.body.style.overflow = '';
+                        searchSuggestions.style.display = 'none';
+                        searchInput.value = '';
+                    }
+                }
+            }
+        });
+
+        searchInput.addEventListener('focus', function() {
+            // Mostra todas as sugestões ao focar, se o campo estiver vazio
+            if (!this.value.trim()) {
+                searchSuggestions.innerHTML = navItemsLupa.map(item => `<div class="search__suggestion" data-id="${item.id}" style="padding:0.75rem 1rem;cursor:pointer;">${item.name}</div>`).join('');
+                searchSuggestions.style.display = 'block';
+            }
+        });
+
+        searchInput.addEventListener('blur', function() {
+            setTimeout(() => { searchSuggestions.style.display = 'none'; }, 150);
+        });
+    })();
+
+    var ctaButton = document.querySelector('.cta-button');
+    if (ctaButton) {
+        ctaButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            var precificadorSection = document.getElementById('precificador');
+            if (precificadorSection) {
+                precificadorSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    }
+});

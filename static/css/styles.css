@@ -435,11 +435,14 @@ body::before {
     display: none;
     place-items: center;
     padding: 1rem;
-    z-index: var(--z-modal);
+    z-index: 99999 !important;
 }
 
 .search.show-search {
-    display: grid;
+    display: flex !important;
+    opacity: 1 !important;
+    pointer-events: initial !important;
+    z-index: 99999 !important;
 }
 
 .search__form {
@@ -499,6 +502,10 @@ body::before {
     display: none; /* Esconder este formulário, pois o box animado o substitui */
 }
 
+.group a {
+    position: relative;
+    z-index: 10002; /* valor maior que o da .box */
+}
 
 /*=============== BREAKPOINTS (Ajustados e Melhorados) ===============*/
 /* For medium devices */
